@@ -25,6 +25,26 @@ import os
 
 from PyQt4 import QtGui, uic
 from PyQt4.QtCore import pyqtSignal
+from PyQt4 import QtGui, QtCore, uic
+from qgis.core import *
+from qgis.networkanalysis import *
+from qgis.gui import *
+import processing
+
+# matplotlib for the charts
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
+# Initialize Qt resources from file resources.py
+import resources
+
+import os
+import os.path
+import random
+import csv
+import time
+
+from . import utility_functions as uf
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'where_2_b_safe_dockwidget_base.ui'))
