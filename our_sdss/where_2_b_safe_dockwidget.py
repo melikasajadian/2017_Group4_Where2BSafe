@@ -44,6 +44,8 @@ class Where2BSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
+        self.pushButton.clicked.connect(self.openScenario)
+
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
@@ -63,3 +65,18 @@ class Where2BSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.startCounterButton.setDisabled(False)
             self.cancelCounterButton.setDisabled(True)
 
+    def openScenario(self,filename=""):
+        scenario_open = False
+        scenario_file = os.path.join(u'/Users/melikasajadian/github/GEO1005','sample_data','P2.shp')
+        # check if file exists
+        if os.path.isfile(scenario_file):
+            self.iface.addProject(scenario_file)
+            scenario_open = True
+        else:
+            last_dir = uf.getLastDir("SDSS")
+            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+            if new_file:
+                self.iface.addProject(unicode(new_file))
+                scenario_open = True
+        if scenario_open:
+            self.updateLayers()
