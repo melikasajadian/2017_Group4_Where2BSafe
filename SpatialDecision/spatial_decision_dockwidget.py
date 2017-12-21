@@ -116,7 +116,7 @@ class SpatialDecisionDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # add button icons
         self.medicButton.setIcon(QtGui.QIcon(':icons/medic_box.png'))
         self.ambulanceButton.setIcon(QtGui.QIcon(':icons/ambulance.png'))
-        self.logoLabel.setPixmap(QtGui.QPixmap(':icons/ambulance.png'))
+
 
         movie = QtGui.QMovie(':icons/loading2.gif')
         self.logoLabel.setMovie(movie)
