@@ -13,6 +13,6 @@
     <file>graphics/location.png</file>
     <file>graphics/school.png</file>
     <file>graphics/shelter.png</file>
-    <file>graphics/pollutiongif.gif</file>
+    <file>graphics/pollutionmovie.gif</file>
     </qresource>
 </RCC>

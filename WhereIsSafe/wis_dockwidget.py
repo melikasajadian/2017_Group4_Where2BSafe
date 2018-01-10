@@ -100,7 +100,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.layers.hide()
         self.map_canvas.hide()
 
-        movie = QtGui.QMovie(':graphics/pollutiongif.gif')
+        movie = QtGui.QMovie(':graphics/pollutionmovie.gif')
         self.logoLabel.setMovie(movie)
         movie.start()
 

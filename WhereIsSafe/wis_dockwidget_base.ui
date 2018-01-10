@@ -102,10 +102,6 @@ background-color:transparent;
 background-image: url(:/graphics/location.png);
 background-position: top left;
 border: none;
-}
-
-QLabel#logoLabel{
-pixmap-image: url(:/graphics/pollutiongif.gif);
 }</string>
    </property>
    <widget class="QFrame" name="Screen">
