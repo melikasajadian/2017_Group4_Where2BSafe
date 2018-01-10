@@ -27,7 +27,7 @@ from PyQt4 import QtGui, uic
 from PyQt4.QtCore import pyqtSignal
 
 from PyQt4 import QtCore, uic
-from PyQt4.QtGui import QWidget, QLabel, QHBoxLayout, QVBoxLayout, QDockWidget, QPixmap, QPushButton, QListWidgetItem, \
+from PyQt4.QtGui import QMovie, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QDockWidget, QPixmap, QPushButton, QListWidgetItem, \
     QGridLayout
 from qgis.core import *
 from qgis.networkanalysis import *
@@ -99,6 +99,10 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.Call112.hide()
         self.layers.hide()
         self.map_canvas.hide()
+
+        movie = QtGui.QMovie(':graphics/pollutiongif.gif')
+        self.logoLabel.setMovie(movie)
+        movie.start()
 
 
 

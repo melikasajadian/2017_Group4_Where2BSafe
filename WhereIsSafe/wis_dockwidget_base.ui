@@ -103,7 +103,10 @@ background-image: url(:/graphics/location.png);
 background-position: top left;
 border: none;
 }
-</string>
+
+QLabel#logoLabel{
+pixmap-image: url(:/graphics/pollutiongif.gif);
+}</string>
    </property>
    <widget class="QFrame" name="Screen">
     <property name="geometry">
@@ -425,35 +428,6 @@ you. check for more info </string>
       </widget>
      </widget>
     </widget>
-    <widget class="QFrame" name="Monitor">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>361</width>
-       <height>611</height>
-      </rect>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <widget class="QCommandLinkButton" name="backm_btn">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>507</y>
-        <width>251</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Back to the map</string>
-      </property>
-     </widget>
-    </widget>
     <widget class="QgsMapCanvas" name="map_canvas" native="true">
      <property name="geometry">
       <rect>
@@ -613,6 +587,48 @@ you. check for more info </string>
         <string/>
        </property>
       </widget>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="Monitor">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>361</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QCommandLinkButton" name="backm_btn">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>507</y>
+        <width>251</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Back to the map</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="logoLabel">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>362</width>
+        <height>154</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
      </widget>
     </widget>
    </widget>
