@@ -102,6 +102,10 @@ background-color:transparent;
 background-image: url(:/graphics/location.png);
 background-position: top left;
 border: none;
+}
+
+QWidget#scroll_messages_contents{
+background-image: url(:/graphics/Twitter_feed.png);
 }</string>
    </property>
    <widget class="QFrame" name="Screen">
@@ -618,13 +622,39 @@ you. check for more info </string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>362</width>
+        <width>361</width>
         <height>154</height>
        </rect>
       </property>
       <property name="text">
        <string>TextLabel</string>
       </property>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>155</y>
+        <width>361</width>
+        <height>345</height>
+       </rect>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scroll_messages_contents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>342</width>
+         <height>343</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>
