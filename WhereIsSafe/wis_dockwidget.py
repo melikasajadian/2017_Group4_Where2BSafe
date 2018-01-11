@@ -362,6 +362,14 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def place_new_location(self, *args):
 
+        if "Routes" in self.active_shpfiles:
+            # Remove the "joined_event" layer
+            QgsMapLayerRegistry.instance().removeMapLayer(self.active_shpfiles["Routes"][0])
+
+            # Delete the corresponding key from the active shapefiles dictionary
+            del self.active_shpfiles["Routes"]
+            self.map_canvas.refresh()
+
         # Get the raw extent of the map
         points = str(self.map_canvas.extent().toString()).split(":")
         point1 = points[0].split(",")
@@ -553,6 +561,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
                                        ["user_logged", "Routes", "shelters", "pollution", "road_network",
                                         "basemap", "ext_basemap"]]
+        self.map_canvas.setLayerSet(self.added_canvaslayers)
 
     def calculateRouteDijkstra(self, graph, from_point, to_point, impedance=0):
         # *Needed
