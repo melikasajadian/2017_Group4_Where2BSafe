@@ -69,6 +69,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.user_features = {}
         self.source_features = {}
         self.shelter_dict = {}
+        self.infoDict={}
 
         # Define the graph
         self.graph = QgsGraph()
@@ -90,7 +91,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.call_btn.clicked.connect(self.callFun)
         self.endcall_btn.clicked.connect(self.back2mapFun)
         self.location_btn.clicked.connect(self.user_extent)
-        #self.layers_btn.clicked.connect(self.check_shelters)
+        self.layers_btn.clicked.connect(self.getInfo)
         #self.help_btn.clicked.connect(self.path2shelter(shelter_id))
 
 
@@ -327,7 +328,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.Monitor.hide()
             self.Profile.hide()
             self.layers.hide()
-            self.Shelter_list.hide()
             self.map_canvas.hide()
             self.Call112.show()
             getattr(self.Call112, "raise")()
@@ -391,7 +391,8 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                       ["shelters"]]:
             layer.removeSelection()
         self.map_canvas.refresh()
-        shleterpos=self.approximate_shelter(xy)
+        self.approximate_shelter(xy)
+        shleterpos=self.infoDict['position']
         translated_x= shleterpos[0]
         translated_y = shleterpos[1]
         # Use road_network as the ref system.
@@ -661,7 +662,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         for layer in [self.active_shpfiles[x][0] for x in
                       ["shelters"]]:
-
+            flds = [str(field.name()) for field in layer.pendingFields()]
             if layer.type() != QgsMapLayer.VectorLayer:
                 # Ignore this layer as it's not a vector
                 continue
@@ -694,6 +695,14 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     shortestDistance = dist
                     closestFeatureId = f.id()
                     xyPosition=f.geometry().asPoint()
+                    # attrs is a list. It contains all the attribute values of this feature
+                    attrs = f.attributes()
+                    self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                           'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                           'capacity': str(attrs[flds.index('capacity')]),
+                                           'occupied': str(attrs[flds.index('occupied')]),
+                                           'position': f.geometry().asPoint()}
+            print self.infoDict
 
             info = (layer, closestFeatureId, shortestDistance,xyPosition)
             layerData.append(info)
@@ -708,7 +717,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Select the closest feature
         layerWithClosestFeature, closestFeatureId, shortestDistance,xyPosition = layerData[0]
         layerWithClosestFeature.select(closestFeatureId)
-        return xyPosition
 
 
     def isInDanger(self):
@@ -727,6 +735,11 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             print 'you are safe'
         else:
             print 'ýou are in danger'
+
+
+    def getInfo(self):
+        infoStr="Type: " + self.infoDict['fclass'] + "\n" + "Capacity: " + self.infoDict['capacity'] + "\n" + "Occupied: " + self.infoDict['occupied'] + "\n"
+        print infoStr
 
 
 
