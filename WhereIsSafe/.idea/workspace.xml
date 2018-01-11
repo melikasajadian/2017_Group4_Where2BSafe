@@ -14,8 +14,8 @@
       <file leaf-file-name="wis_dockwidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4396">
-              <caret line="116" column="24" lean-forward="false" selection-start-line="116" selection-start-column="24" selection-end-line="116" selection-end-column="24" />
+            <state relative-caret-position="259">
+              <caret line="94" column="25" lean-forward="false" selection-start-line="94" selection-start-column="25" selection-end-line="94" selection-end-column="25" />
               <folding>
                 <element signature="e#1215#1224#0" expanded="true" />
               </folding>
@@ -95,6 +95,9 @@
       <find>draw</find>
       <find>logged</find>
       <find>print</find>
+      <find>parser</find>
+      <find>feature.a</find>
+      <find>place</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -704,8 +707,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4396">
-          <caret line="116" column="24" lean-forward="false" selection-start-line="116" selection-start-column="24" selection-end-line="116" selection-end-column="24" />
+        <state relative-caret-position="259">
+          <caret line="94" column="25" lean-forward="false" selection-start-line="94" selection-start-column="25" selection-end-line="94" selection-end-column="25" />
           <folding>
             <element signature="e#1215#1224#0" expanded="true" />
           </folding>
