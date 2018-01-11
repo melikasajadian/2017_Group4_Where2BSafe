@@ -114,9 +114,10 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def situOverview(self):
         self.FirstPage.hide()
         self.map_canvas.show()
-        self.user_id = 4
+        self.user_id = 3
         self.source_id = 1
         self.load_shapefiles()
+        self.isInDanger()
 
 
 
@@ -383,7 +384,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Translate mouse position based on the canvas size (342x608)
         translated_x0 = x_pos_min + ((args[0].pos().x() * (x_pos_max - x_pos_min)) / 361.)
         translated_y0 = y_pos_max - ((args[0].pos().y() * (y_pos_max - y_pos_min)) / 611.)
-        print translated_x0, translated_y0
         xy=QgsPoint(translated_x0,translated_y0)
         self.selected_shelter_pos=None
 
@@ -709,6 +709,24 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         layerWithClosestFeature, closestFeatureId, shortestDistance,xyPosition = layerData[0]
         layerWithClosestFeature.select(closestFeatureId)
         return xyPosition
+
+
+    def isInDanger(self):
+        intersectPly=[]
+        for layer1 in [self.active_shpfiles[x][0] for x in
+                      ["user_logged"]]:
+            for layer2 in [self.active_shpfiles[x][0] for x in
+                          ["pollution"]]:
+                for a in layer1.getFeatures():
+                    for b in layer2.getFeatures():
+                        if a.geometry().intersects(b.geometry()):
+                            idTuple=(int(a.id()),int(b.id()))
+                            intersectPly.append(idTuple)
+        print intersectPly
+        if not intersectPly:
+            print 'you are safe'
+        else:
+            print 'ýou are in danger'
 
 
 
