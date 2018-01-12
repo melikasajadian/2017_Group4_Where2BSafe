@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
+    <width>412</width>
     <height>788</height>
    </rect>
   </property>
@@ -84,6 +84,11 @@ background-position: top left;
 
 QPushButton#call_btn{
 background-image: url(:/graphics/call112.png);
+background-position: top left;
+}
+
+QPushButton#layers_btn{
+background-image: url(:/graphics/info.png);
 background-position: top left;
 }
 
@@ -650,12 +655,67 @@ you. check for more info </string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>342</width>
+         <width>338</width>
          <height>343</height>
         </rect>
        </property>
       </widget>
      </widget>
+    </widget>
+    <widget class="QLabel" name="dangerNotif">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>550</y>
+       <width>331</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="ShelterInfo">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>559</y>
+      <width>321</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="closeInfo_btn">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>10</y>
+       <width>28</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="infoLable">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>261</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
     </widget>
    </widget>
   </widget>

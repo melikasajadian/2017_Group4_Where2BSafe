@@ -15,5 +15,6 @@
     <file>graphics/shelter.png</file>
     <file>graphics/pollutionmovie.gif</file>
     <file>graphics/Twitter_feed.png</file>
+    <file>graphics/info.png</file>
     </qresource>
 </RCC>
