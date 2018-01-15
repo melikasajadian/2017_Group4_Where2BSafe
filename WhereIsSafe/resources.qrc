@@ -16,5 +16,11 @@
     <file>graphics/pollutionmovie.gif</file>
     <file>graphics/Twitter_feed.png</file>
     <file>graphics/info.png</file>
+    <file>graphics/dangerNotif.png</file>
+    <file>graphics/safeNotif.png</file>
+    <file>graphics/appPage.png</file>
+    <file>graphics/bigicon.png</file>
+    <file>graphics/firstNotif.png</file>
+    <file>graphics/close.png</file>
     </qresource>
 </RCC>

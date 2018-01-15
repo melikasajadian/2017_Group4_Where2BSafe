@@ -81,6 +81,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # Set shelter position as point
         self.selected_shelter_pos = None
+        self.candid_shelter_pos= None
 
         # Bind mouse click to canvas for adding new events
         self.map_canvas.mouseDoubleClickEvent = self.place_new_location
@@ -96,6 +97,9 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.layers_btn.clicked.connect(self.getInfo)
         #self.help_btn.clicked.connect(self.path2shelter(shelter_id))
         self.closeInfo_btn.clicked.connect(self.close_info)
+        self.AppIcon_btn.clicked.connect(self.startapp)
+        self.Notif_btn.clicked.connect(self.startapp)
+        self.select_btn.clicked.connect(self.go_to_shelter)
 
 
         self.Monitor.hide()
@@ -104,13 +108,20 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.layers.hide()
         self.map_canvas.hide()
         self.dangerNotif.hide()
+        self.safeNotif.hide()
         self.ShelterInfo.hide()
+        self.FirstPage.hide()
+        self.lastNotif.hide()
 
         movie = QtGui.QMovie(':graphics/pollutionmovie.gif')
         self.logoLabel.setMovie(movie)
         movie.start()
 
 
+    def startapp(self):
+        self.AppPage.hide()
+        self.FirstPage.show()
+        getattr(self.FirstPage, "raise")()
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -188,23 +199,15 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         s.setValue("/Projections/defaultBehaviour", "useGlobal")
 
         # Create the raster basemap layer
-        basemap_layer = QgsRasterLayer(os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/basemap.tiff", "Basemap")
+        basemap_layer = QgsRasterLayer(os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/basemap.tif", "Basemap")
         basemap_layer.setCrs(QgsCoordinateReferenceSystem(28992, QgsCoordinateReferenceSystem.EpsgCrsId))
 
-        # Create the extent raster extent_basemap layer
-        ext_basemap_layer = QgsRasterLayer(os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/extent_basemap.tiff", "Extent Basemap")
-        ext_basemap_layer.setCrs(QgsCoordinateReferenceSystem(28992, QgsCoordinateReferenceSystem.EpsgCrsId))
 
         s.setValue("/Projections/defaultBehaviour", oldValidation)
 
         # Add the raster layer to the dictionary
         self.active_shpfiles["basemap"] = [basemap_layer, QgsMapCanvasLayer(basemap_layer)]
 
-        # Add the extent raster layer to the dictionary
-        self.active_shpfiles["ext_basemap"] = [ext_basemap_layer, QgsMapCanvasLayer(ext_basemap_layer)]
-
-        # Add the extent raster layer to the registry
-        QgsMapLayerRegistry.instance().addMapLayer(ext_basemap_layer)
 
         # Add the raster layer to the registry
         QgsMapLayerRegistry.instance().addMapLayer(basemap_layer)
@@ -280,7 +283,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Apply the theme
             if layer_class == "road_network":
                 # Set the symbol
-                transp_symbol = QgsLineSymbolV2.createSimple({'line_style': 'yes'})
+                transp_symbol = QgsLineSymbolV2.createSimple({'line_style': 'n0'})
                 vlayer.rendererV2().setSymbol(transp_symbol)
 
             # Add the layer to the dictionary
@@ -294,7 +297,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/pollution.qml")
 
         # Load the corresponding Shapefiles
-        self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged", "pollution", "road_network", "basemap", "ext_basemap"]]
+        self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged", "pollution", "road_network", "basemap"]]
 
         # provide set of layers for display on the map canvas
         self.map_canvas.setLayerSet(self.added_canvaslayers)
@@ -309,7 +312,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def refresh_extent(self, layer_to_load):
         if layer_to_load == "user_pos":
-            extnt = QgsRectangle(self.user_pos[0]-197.9, self.user_pos[1]-255, self.user_pos[0]+195.1, self.user_pos[1]+295)
+            extnt = QgsRectangle(self.user_pos[0]-300, self.user_pos[1]-400, self.user_pos[0]+400, self.user_pos[1]+500)
         else:
             event_pos = self.shelter_dict[layer_to_load]["position"]
             extnt = QgsRectangle(event_pos[0]-197.9, event_pos[1]-350, event_pos[0]+195.1, event_pos[1]+50)
@@ -338,7 +341,8 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             getattr(self.Call112, "raise")()
 
         if self.yes.isChecked()==True:
-            for layer_class in ["shelters"]:
+            layerPoint=self.user_pos
+            for layer_class in ["Total_shelters"]:
                 # create vector layer object
                 vlayer = QgsVectorLayer(os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/" +
                                         layer_class + ".shp", layer_class, "ogr")
@@ -356,14 +360,47 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 for f in vlayer.getFeatures():
                     flds = [str(field.name()) for field in vlayer.pendingFields()]
                     attrs = f.attributes()
-                    if attrs[flds.index('capacity')]-attrs[flds.index('occupied')]>20:
+                    dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
+                    if self.young.isChecked()==True:
+                        if attrs[flds.index('capacity')]-attrs[flds.index('occupied')]>20:
+                            if self.walk.isChecked()==True:
+                                if dist<3000:
+                                    # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                                    self.shelter_features[f['shelter_id']] = f
 
-                        # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                                    # Add the user feature into the provider/layer
+                                    prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                            if self.bike.isChecked() == True:
+                                    if dist < 5000:
+                                            # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                                        self.shelter_features[f['shelter_id']] = f
+                                        # Add the user feature into the provider/layer
+                                        prov.addFeatures([self.shelter_features[f['shelter_id']]])
 
-                        self.shelter_features[f['shelter_id']] = f
+                            if self.car.isChecked() == True:
+                                self.shelter_features[f['shelter_id']] = f
+                                # Add the user feature into the provider/layer
+                                prov.addFeatures([self.shelter_features[f['shelter_id']]])
 
-                        # Add the user feature into the provider/layer
-                        prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                    if self.child.isChecked() == True or self.old.isChecked() == True:
+                        if self.walk.isChecked() == True:
+                            dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
+                            if dist < 1000:
+                                self.shelter_features[f['shelter_id']] = f
+                                prov.addFeatures([self.shelter_features[f['shelter_id']]])
+
+                        if self.bike.isChecked() == True:
+                                if dist < 1500:
+                                    # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                                    self.shelter_features[f['shelter_id']] = f
+                                    # Add the user feature into the provider/layer
+                                    prov.addFeatures([self.shelter_features[f['shelter_id']]])
+
+                        if self.car.isChecked() == True:
+                            self.shelter_features[f['shelter_id']] = f
+                            # Add the user feature into the provider/layer
+                            prov.addFeatures([self.shelter_features[f['shelter_id']]])
+
 
                 # Set the symbol for the layer
                 symbol = QgsMarkerSymbolV2.createSimple({'size': '3'})
@@ -378,10 +415,11 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # add the layer to the registry
                 QgsMapLayerRegistry.instance().addMapLayer(shelter_layer)
 
-
+            self.active_shpfiles["customize_shelter"][0].loadNamedStyle(
+                os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/Total_shelters.qml")
 
             # Load the corresponding Shapefiles
-            self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged","customize_shelter", "pollution", "road_network", "basemap", "ext_basemap"]]
+            self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged","customize_shelter", "pollution", "road_network", "basemap"]]
 
             # provide set of layers for display on the map canvas
             self.map_canvas.setLayerSet(self.added_canvaslayers)
@@ -392,8 +430,12 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
             # Convert shelters into a dictionary
             self.shelter_dict = self.shelter_parser(self.active_shpfiles["customize_shelter"][0])
-            self.selected_shelter_pos=self.nearest_shelter()
+            self.selected_shelter_pos=self.close_shelter()
             self.find_nearest_path()
+
+            self.dangerNotif.hide()
+            self.safeNotif.hide()
+
 
 
 
@@ -494,7 +536,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
                                        ["user_logged", "customize_shelter","new_place", "pollution", "road_network",
-                                           "basemap", "ext_basemap"]]
+                                           "basemap"]]
 
         # provide set of layers for display on the map canvas
         self.map_canvas.setLayerSet(self.added_canvaslayers)
@@ -542,6 +584,23 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         path = self.calculateRouteDijkstra(self.graph, self.tied_points[0], self.tied_points[1])
         self.draw_route(path, ref_layer)
 
+    def find_nearest_seq(self):
+        # * Needed
+        # Use road_network as the ref system.
+        ref_layer = self.active_shpfiles["road_network"][0]
+        # get the points to be used as origin and destination
+        source_points = [self.user_pos, self.candid_shelter_pos]
+        # build the graph including these points
+        director = QgsLineVectorLayerDirector(ref_layer, -1, '', '', '', 3)
+        properter = QgsDistanceArcProperter()
+        director.addProperter(properter)
+        builder = QgsGraphBuilder(ref_layer.crs())
+        self.tied_points = director.makeGraph(builder, source_points)
+        self.graph = builder.graph()
+        # calculate the shortest path for the given origin and destination
+        distance = self.calculateDistDijkstra(self.graph, self.tied_points[0], self.tied_points[1])
+        return distance
+
 
     def draw_route(self, path, ref_lay):
         # *Needed
@@ -568,7 +627,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         x_min, x_max = sorted((self.selected_shelter_pos[0], self.user_pos[0]))
         y_min, y_max = sorted((self.selected_shelter_pos[1], self.user_pos[1]))
-        extent = QgsRectangle(x_min - 60, y_min - 60, x_max + 60, y_max + 300)
+        extent = QgsRectangle(x_min - 500, y_min - 500, x_max + 500, y_max + 600)
         self.map_canvas.setExtent(extent)
 
         res = processing.runalg("qgis:createpointsalonglines", 'Routes', 7, 0, 0, None)
@@ -578,27 +637,17 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.user_pos_path = [feature.geometry().asPoint() for feature in layer.getFeatures()]
         self.user_pos_path.reverse()
 
-        #if "joined_event" not in self.active_shpfiles:
-            # Add the layer to the dictionary
-            #self.active_shpfiles["joined_event"] = [vlayer, QgsMapCanvasLayer(vlayer)]
-
-            #self.added_canvaslayers = [self.active_shpfiles[x][1] for x in [
-                #"user_logged", "group_pos", "tasks", "joined_event", "road_network", "basemap", "ext_basemap"]]
-
-            # provide set of layers for display on the map canvas
-            #self.map_canvas.setLayerSet(self.added_canvaslayers)
-
         # Re-render the road network (along with everything else)
         self.active_shpfiles["road_network"][0].triggerRepaint()
 
         if "new_place" in self.active_shpfiles:
             self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
                                     ["user_logged","Routes", "customize_shelter", "new_place", "pollution", "road_network",
-                                    "basemap", "ext_basemap"]]
+                                    "basemap"]]
         else:
             self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
                                        ["user_logged", "Routes", "customize_shelter", "pollution", "road_network",
-                                        "basemap", "ext_basemap"]]
+                                        "basemap"]]
         self.map_canvas.setLayerSet(self.added_canvaslayers)
 
     def calculateRouteDijkstra(self, graph, from_point, to_point, impedance=0):
@@ -618,23 +667,43 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
             points.append(from_point)
             points.reverse()
+
         return points
 
-    def nearest_shelter(self):
-        """
-        Each time the mouse is clicked on the map canvas, perform
-        the following tasks:
-            Loop through all visible vector layers and for each:
-                Ensure no features are selected
-                Determine the distance of the closes feature in the layer to the mouse click
-                Keep track of the layer id and id of the closest feature
-            Select the id of the closes feature
-        """
+    def calculateDistDijkstra(self, graph, from_point, to_point, impedance=0):
+        # *Needed
+        points = []
+        # analyse graph
+        from_id = graph.findVertex(from_point)
+        to_id = graph.findVertex(to_point)
+        (tree, cost) = QgsGraphAnalyzer.dijkstra(graph, from_id, impedance)
+        if tree[to_id] == -1:
+            pass
+        else:
+            curPos = to_id
+            while curPos != from_id:
+                points.append(graph.vertex(graph.arc(tree[curPos]).inVertex()).point())
+                curPos = graph.arc(tree[curPos]).outVertex()
+
+            points.append(from_point)
+            points.reverse()
+        dist=0
+        for i in xrange(0,len(points)-1):
+            dx=(points[i][0]- points[i+1][0])**2
+            dy=(points[i][1]- points[i+1][1])**2
+            dist=dist+(dx+dy)**0.5
+
+        return dist
+
+
+
+    def close_shelter(self):
 
         layerData = []
 
         for layer in [self.active_shpfiles[x][0] for x in
                       ["customize_shelter"]]:
+            flds = [str(field.name()) for field in layer.pendingFields()]
 
             if layer.type() != QgsMapLayer.VectorLayer:
                 # Ignore this layer as it's not a vector
@@ -646,6 +715,75 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         for layer in [self.active_shpfiles[x][0] for x in
                       ["customize_shelter"]]:
+
+
+            if layer.type() != QgsMapLayer.VectorLayer:
+                # Ignore this layer as it's not a vector
+                continue
+
+            if layer.featureCount() == 0:
+                # There are no features - skip
+                continue
+
+            # Determine the location of the click in real-world coords
+            layerPoint = self.user_pos
+            shortestDistance = 10000.00
+            closestFeatureId = -1
+
+            # Loop through all features in the layer
+            for f in layer.getFeatures():
+                dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
+                if dist<4000:
+                    self.candid_shelter_pos=f.geometry().asPoint()
+                    dist = self.find_nearest_seq()
+                    if dist < shortestDistance:
+                        shortestDistance = dist
+                        closestFeatureId = f.id()
+                        xyPosition = f.geometry().asPoint()
+                        traveltime = str((dist / 0.6) / 60) + " min of walking"
+                        # attrs is a list. It contains all the attribute values of this feature
+                        attrs = f.attributes()
+                        self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                     'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                     'capacity': str(attrs[flds.index('capacity')]),
+                                     'occupied': str(attrs[flds.index('occupied')]),
+                                     'position': f.geometry().asPoint(), 'time': traveltime}
+
+            info = (layer, closestFeatureId, shortestDistance, xyPosition)
+            layerData.append(info)
+
+        if not len(layerData) > 0:
+            # Looks like no vector layers were found - do nothing
+            return
+
+            # Sort the layer information by shortest distance
+        layerData.sort(key=lambda element: element[2])
+
+        # Select the closest feature
+        layerWithClosestFeature, closestFeatureId, shortestDistance, xyPosition = layerData[0]
+        layerWithClosestFeature.select(closestFeatureId)
+        return xyPosition
+
+
+    def nearest_shelter(self):
+
+        layerData = []
+
+        for layer in [self.active_shpfiles[x][0] for x in
+                      ["customize_shelter"]]:
+            flds = [str(field.name()) for field in layer.pendingFields()]
+
+            if layer.type() != QgsMapLayer.VectorLayer:
+                # Ignore this layer as it's not a vector
+                continue
+
+            if layer.featureCount() == 0:
+                # There are no features - skip
+                continue
+
+        for layer in [self.active_shpfiles[x][0] for x in
+                      ["customize_shelter"]]:
+
 
             if layer.type() != QgsMapLayer.VectorLayer:
                 # Ignore this layer as it's not a vector
@@ -666,22 +804,30 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 if dist < shortestDistance:
                     shortestDistance = dist
                     closestFeatureId = f.id()
+                    xyPosition = f.geometry().asPoint()
+                    traveltime = str((dist / 0.6) / 60) + " min of walking"
+                    # attrs is a list. It contains all the attribute values of this feature
+                    attrs = f.attributes()
+                    self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                     'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                     'capacity': str(attrs[flds.index('capacity')]),
+                                     'occupied': str(attrs[flds.index('occupied')]),
+                                     'position': f.geometry().asPoint(), 'time': traveltime}
 
-            info = (layer, closestFeatureId, shortestDistance)
+            info = (layer, closestFeatureId, shortestDistance, xyPosition)
             layerData.append(info)
 
         if not len(layerData) > 0:
             # Looks like no vector layers were found - do nothing
             return
 
-        # Sort the layer information by shortest distance
+            # Sort the layer information by shortest distance
         layerData.sort(key=lambda element: element[2])
 
         # Select the closest feature
-        layerWithClosestFeature, closestFeatureId, shortestDistance = layerData[0]
+        layerWithClosestFeature, closestFeatureId, shortestDistance, xyPosition = layerData[0]
         layerWithClosestFeature.select(closestFeatureId)
-        return self.shelter_dict['shelter']['position']
-
+        return xyPosition
 
 
     def approximate_shelter(self,xy):
@@ -758,8 +904,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def isInDanger(self):
-        self.dangerNotif.show()
-        getattr(self.dangerNotif, "raise")()
         intersectPly=[]
         for layer1 in [self.active_shpfiles[x][0] for x in
                       ["user_logged"]]:
@@ -770,11 +914,15 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                         if a.geometry().intersects(b.geometry()):
                             idTuple=(int(a.id()),int(b.id()))
                             intersectPly.append(idTuple)
-        print intersectPly
+
         if not intersectPly:
-            self.dangerNotif.setText('You are safe')
+            self.safeNotif.show()
+            getattr(self.safeNotif, "raise")()
+
         else:
-            self.dangerNotif.setText('you are in danger')
+            self.dangerNotif.show()
+            getattr(self.dangerNotif, "raise")()
+
 
 
     def getInfo(self):
@@ -782,44 +930,25 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.ShelterInfo.show()
         getattr(self.ShelterInfo, "raise")()
         self.infoLable.setText(infoStr)
+        newfont = QtGui.QFont("Times", 12, QtGui.QFont.Bold)
+        self.infoLable.setFont(newfont)
 
     def close_info(self):
         self.ShelterInfo.hide()
+
+
+    def go_to_shelter(self):
         fid = [feat for feat in self.active_shpfiles["user_logged"][0].getFeatures()][0].id()
 
         # Try to get new user position from the path queue
         while self.user_pos_path:
+            time.sleep(0.0001)
             self.user_pos = self.user_pos_path.pop()
             geom = QgsGeometry.fromPoint(QgsPoint(self.user_pos))
             self.active_shpfiles["user_logged"][0].dataProvider().changeGeometryValues({fid: geom})
             self.active_shpfiles["user_logged"][0].triggerRepaint()
             self.refresh_extent("user_pos")
             self.active_shpfiles["Routes"][0].triggerRepaint()
-            print 'Walking'
-            # for layer in [self.active_shpfiles[x][0] for x in
-            # ["user_logged", "Routes"]]:
-            # layer.triggerRepaint()
-            # User arrived to the event. Terminate path
-
-            # Update the popup message
-            # self.arrived_popup_label.setText("You arrived at the hotspot.\nRemember, there are {} people in\n"
-            # "total registered to help.\n\nGOOD LUCK and STAY SAFE!".format(
-            # self.task_dict[self.joined_event]['joined'] + 1))
-
-
-            # Hide every possibly activated layer, to make following popup the single object being showed
-
-            # Hide all layers except arrived_popup
-            # self.layers_to_keep(["arrived_popup"])
-
-            # Show notice that user reached the event destination
-            # self.arrived_popup.show()
-
-            # Remove the previous new event to prevent multiple layer stacking
-            # QgsMapLayerRegistry.instance().removeMapLayer(self.active_shpfiles["joined_event"][0])
-
-            # Delete the layer from the dictionary
-            # del self.active_shpfiles["joined_event"]
 
             # Re-render the road network (along with everything else)
             self.active_shpfiles["road_network"][0].triggerRepaint()
@@ -827,6 +956,13 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Set the flag of the new_event's registration button, to "Ready"
             # self.register_event.setStyleSheet(
             # "QPushButton#register_event:hover {background-image: url(:/graphics/thin_button_background_correct.png);}")
+        self.ShelterInfo.hide()
+        infoStr = "You now reached to the shelter." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The number of people in the shelter is now " + str(int(self.infoDict[
+            'occupied']) + 1 ) + "\n"
+        self.lastNotif.show()
+        getattr(self.lastNotif, "raise")()
+        self.reachedNotif.setText(infoStr)
+
 
 
 

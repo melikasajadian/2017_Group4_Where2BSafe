@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>412</width>
+    <width>973</width>
     <height>788</height>
    </rect>
   </property>
@@ -37,6 +37,10 @@
 background-image: url(:/graphics/Phone_Template.png);
 background-position: top left;
 }
+QFrame#AppPage{
+background-image: url(:/graphics/appPage.png);
+background-position: top;
+}
 
 QFrame#FirstPage{
 background-image: url(:/graphics/first_page.png);
@@ -64,6 +68,18 @@ color: blue;
 QPushButton#endcall_btn{
 background-color:transparent;
 background-image: url(:/graphics/endcall.png);
+background-position: top left;
+}
+
+QPushButton#AppIcon_btn{
+background-color:transparent;
+background-image: url(:/graphics/bigicon.png);
+background-position: top left;
+}
+
+QPushButton#Notif_btn{
+background-color:transparent;
+background-image: url(:/graphics/firstNotif.png);
 background-position: top left;
 }
 
@@ -102,6 +118,16 @@ background-image: url(:/graphics/profilepage.png);
 background-position: top left;
 }
 
+QLabel#dangerNotif{
+background-image: url(:/graphics/dangerNotif.png);
+background-position: top left;
+}
+
+QLabel#safeNotif{
+background-image: url(:/graphics/safeNotif.png);
+background-position: top left;
+}
+
 QPushButton#location_btn{
 background-color:transparent;
 background-image: url(:/graphics/location.png);
@@ -109,6 +135,18 @@ background-position: top left;
 border: none;
 }
 
+QPushButton#select_btn{
+background-color:transparent;
+border: none;
+color: green;
+}
+
+
+QPushButton#closeInfo_btn{
+background-color:transparent;
+border: none;
+background-image: url(:/graphics/close.png);
+}
 QWidget#scroll_messages_contents{
 background-image: url(:/graphics/Twitter_feed.png);
 }</string>
@@ -159,7 +197,7 @@ background-image: url(:/graphics/Twitter_feed.png);
        <x>10</x>
        <y>50</y>
        <width>361</width>
-       <height>611</height>
+       <height>621</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -199,7 +237,7 @@ you. check for more info </string>
        <x>10</x>
        <y>50</y>
        <width>361</width>
-       <height>611</height>
+       <height>621</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -228,7 +266,7 @@ you. check for more info </string>
        <x>10</x>
        <y>50</y>
        <width>361</width>
-       <height>611</height>
+       <height>621</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -439,7 +477,7 @@ you. check for more info </string>
        <x>10</x>
        <y>50</y>
        <width>361</width>
-       <height>611</height>
+       <height>621</height>
       </rect>
      </property>
      <property name="font">
@@ -457,19 +495,6 @@ you. check for more info </string>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
-     <widget class="QLabel" name="danger">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>690</y>
-        <width>53</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="safe">
       <property name="geometry">
        <rect>
@@ -555,7 +580,7 @@ you. check for more info </string>
       <property name="geometry">
        <rect>
         <x>300</x>
-        <y>480</y>
+        <y>450</y>
         <width>38</width>
         <height>38</height>
        </rect>
@@ -600,7 +625,7 @@ you. check for more info </string>
        <x>10</x>
        <y>50</y>
        <width>361</width>
-       <height>611</height>
+       <height>621</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -675,6 +700,106 @@ you. check for more info </string>
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="safeNotif">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>550</y>
+       <width>331</width>
+       <height>82</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QFrame" name="AppPage">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>361</width>
+       <height>621</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="AppIcon_btn">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>380</y>
+        <width>83</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Notif_btn">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>361</width>
+        <height>74</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <zorder>AppIcon_btn</zorder>
+     <zorder>Notif_btn</zorder>
+     <zorder>lastNotif</zorder>
+    </widget>
+    <widget class="QFrame" name="lastNotif">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>200</y>
+       <width>331</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="reachedNotif">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>331</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <zorder>FirstPage</zorder>
+    <zorder>Call112</zorder>
+    <zorder>Profile</zorder>
+    <zorder>map_canvas</zorder>
+    <zorder>Monitor</zorder>
+    <zorder>dangerNotif</zorder>
+    <zorder>safeNotif</zorder>
+    <zorder>AppPage</zorder>
+    <zorder>AppPage</zorder>
+    <zorder>lastNotif</zorder>
    </widget>
    <widget class="QFrame" name="ShelterInfo">
     <property name="geometry">
@@ -696,8 +821,8 @@ you. check for more info </string>
       <rect>
        <x>280</x>
        <y>10</y>
-       <width>28</width>
-       <height>28</height>
+       <width>32</width>
+       <height>32</height>
       </rect>
      </property>
      <property name="text">
@@ -715,6 +840,25 @@ you. check for more info </string>
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="select_btn">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>80</y>
+       <width>101</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Select shelter</string>
      </property>
     </widget>
    </widget>
