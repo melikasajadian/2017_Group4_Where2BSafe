@@ -158,6 +158,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.map_canvas.hide()
         self.Profile.show()
         getattr(self.Profile, "raise")()
+        self.shelter_features = {}
 
     def back2mapFun(self):
         self.Monitor.hide()
@@ -257,36 +258,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # add the layer to the registry
         QgsMapLayerRegistry.instance().addMapLayer(user_layer)
 
-        # Update the dictionary refering to each different source as a distinct feature object of a shapefile
-        #for feature in sources_layer.getFeatures():
-            #self.source_features[feature['SourceID']] = feature
-
-        # Create a logged-in source specific vector source
-        #source_layer = QgsVectorLayer('%s?crs=EPSG:%s' % ('Point', sources_layer.crs().postgisSrid()), 'source', "memory")
-
-        #prov1 = source_layer.dataProvider()
-
-        # Generate the fields
-        #prov1.addAttributes([field for field in sources_layer.pendingFields()])
-
-        # Tell the vector layer to fetch changes from the provider
-        #source_layer.updateFields()
-
-        # Add the source feature into the provider/layer
-        #prov1.addFeatures([self.source_features[self.source_id]])
-
-        # Set the symbol for the layer
-        #symbol = QgsMarkerSymbolV2.createSimple({'size': '3'})
-        #source_layer.rendererV2().setSymbol(symbol)
-
-        # Delete the feature of the logged in source. That source became a seperate vlayer.
-        #del self.source_features[self.source_id]
-
-        # Add the layer to the dictionary of active shapefiles
-        #self.active_shpfiles["source_logged"] = [source_layer, QgsMapCanvasLayer(source_layer)]
-
-        # add the layer to the registry
-        #QgsMapLayerRegistry.instance().addMapLayer(source_layer)
 
         # load the rest of the vector layers
         for layer_class in ["road_network", "pollution"]:
@@ -683,6 +654,25 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
             points.append(from_point)
             points.reverse()
+            dist = 0
+            for i in xrange(0, len(points) - 1):
+                dx = (points[i][0] - points[i + 1][0]) ** 2
+                dy = (points[i][1] - points[i + 1][1]) ** 2
+                dist = dist + (dx + dy) ** 0.5
+
+            seconds = (dist / self.speed)
+            m, s = divmod(seconds, 60)
+            h, m = divmod(m, 60)
+            traveltime = str(h) + " : " + str(m) + " : " + str(s)
+            if self.speed <= 1:
+                timeStr = str(traveltime) + " min of walking"
+            elif 2 <= self.speed <= 4:
+                timeStr = str(traveltime) + " by bike"
+            else:
+                timeStr = str(traveltime) + " by car"
+
+            self.infoDict['time']= timeStr
+
 
         return points
 
@@ -758,7 +748,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                         xyPosition = f.geometry().asPoint()
                         # attrs is a list. It contains all the attribute values of this feature
                         attrs = f.attributes()
-                        print attrs[flds.index('capacity')]
                         if attrs[flds.index('capacity')]>0:
                             seconds = (dist / self.speed)
                             m, s = divmod(seconds, 60)
@@ -774,8 +763,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                          'shelter_id': str(attrs[flds.index('shelter_id')]),
                                          'capacity': str(attrs[flds.index('capacity')]),
                                          'occupied': str(attrs[flds.index('occupied')]),
-                                         'position': f.geometry().asPoint()}
-                            print self.infoDict
+                                         'position': f.geometry().asPoint(),'time': timeStr}
                         else:
                             seconds = (dist / self.speed)
                             m, s = divmod(seconds, 60)
@@ -791,74 +779,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                              'shelter_id': str(attrs[flds.index('shelter_id')]),
                                              'descript': str(attrs[flds.index('desc')]),
                                              'position': f.geometry().asPoint(),'time': timeStr}
-                            print self.infoDict
-
-
-
-            info = (layer, closestFeatureId, shortestDistance, xyPosition)
-            layerData.append(info)
-
-        if not len(layerData) > 0:
-            # Looks like no vector layers were found - do nothing
-            return
-
-            # Sort the layer information by shortest distance
-        layerData.sort(key=lambda element: element[2])
-
-        # Select the closest feature
-        layerWithClosestFeature, closestFeatureId, shortestDistance, xyPosition = layerData[0]
-        layerWithClosestFeature.select(closestFeatureId)
-        return xyPosition
-
-
-    def nearest_shelter(self):
-
-        layerData = []
-
-        for layer in [self.active_shpfiles[x][0] for x in
-                      ["customize_shelter"]]:
-            flds = [str(field.name()) for field in layer.pendingFields()]
-
-            if layer.type() != QgsMapLayer.VectorLayer:
-                # Ignore this layer as it's not a vector
-                continue
-
-            if layer.featureCount() == 0:
-                # There are no features - skip
-                continue
-
-        for layer in [self.active_shpfiles[x][0] for x in
-                      ["customize_shelter"]]:
-
-
-            if layer.type() != QgsMapLayer.VectorLayer:
-                # Ignore this layer as it's not a vector
-                continue
-
-            if layer.featureCount() == 0:
-                # There are no features - skip
-                continue
-
-            # Determine the location of the click in real-world coords
-            layerPoint = self.user_pos
-            shortestDistance = float("inf")
-            closestFeatureId = -1
-
-            # Loop through all features in the layer
-            for f in layer.getFeatures():
-                dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
-                if dist < shortestDistance:
-                    shortestDistance = dist
-                    closestFeatureId = f.id()
-                    xyPosition = f.geometry().asPoint()
-                    traveltime = str((dist / 0.6) / 60) + " min of walking"
-                    # attrs is a list. It contains all the attribute values of this feature
-                    attrs = f.attributes()
-                    self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
-                                     'shelter_id': str(attrs[flds.index('shelter_id')]),
-                                     'capacity': str(attrs[flds.index('capacity')]),
-                                     'occupied': str(attrs[flds.index('occupied')]),
-                                     'position': f.geometry().asPoint(), 'time': traveltime}
 
             info = (layer, closestFeatureId, shortestDistance, xyPosition)
             layerData.append(info)
@@ -924,15 +844,22 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     shortestDistance = dist
                     closestFeatureId = f.id()
                     xyPosition=f.geometry().asPoint()
-                    traveltime=str((dist/0.6)/60)+" min of walking"
+
                     # attrs is a list. It contains all the attribute values of this feature
                     attrs = f.attributes()
-                    self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
-                                           'shelter_id': str(attrs[flds.index('shelter_id')]),
-                                           'capacity': str(attrs[flds.index('capacity')]),
-                                           'occupied': str(attrs[flds.index('occupied')]),
-                                           'position': f.geometry().asPoint(), 'time': traveltime}
-            print self.infoDict
+                    if attrs[flds.index('capacity')] > 0:
+                        self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                         'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                         'capacity': str(attrs[flds.index('capacity')]),
+                                         'occupied': str(attrs[flds.index('occupied')]),
+                                         'position': f.geometry().asPoint()}
+                    else:
+                        self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                         'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                         'descript': str(attrs[flds.index('desc')]),
+                                         'position': f.geometry().asPoint()}
+
+
 
             info = (layer, closestFeatureId, shortestDistance,xyPosition)
             layerData.append(info)
@@ -975,12 +902,11 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def getInfo(self):
-        if self.infoDict['fclass']=='college' or self.infoDict['fclass']=='library' or self.infoDict['fclass']=='shelter' or self.infoDict['fclass']=='school' or self.infoDict['fclass']=='university'  or self.infoDict['fclass']=='sports_center':
+        if self.infoDict['fclass']=='college' or self.infoDict['fclass']=='library' or self.infoDict['fclass']=='shelter' or self.infoDict['fclass']=='school' or self.infoDict['fclass']=='university'  or self.infoDict['fclass']=='sports_centre':
             infoStr="Type: " + self.infoDict['fclass'] + "\n" + "Capacity: " + self.infoDict['capacity'] + "\n" + "Occupied: " + self.infoDict['occupied'] + "\n"+ "Travel time: " + self.infoDict['time'] + "\n"
         else:
             infoStr = "Type: " + self.infoDict['fclass'] + "\n" + "Description: " + self.infoDict[
-                'descript'] + "\n"  + "Travel time: " + self.infoDict[
-                          'time'] + "\n"
+                'descript'] + "\n"  + "Travel time: " + self.infoDict['time'] + "\n"
 
         self.ShelterInfo.show()
         getattr(self.ShelterInfo, "raise")()

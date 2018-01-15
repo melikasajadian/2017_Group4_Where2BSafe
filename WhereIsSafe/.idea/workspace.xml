@@ -14,8 +14,8 @@
       <file leaf-file-name="wis_dockwidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="796" column="0" lean-forward="true" selection-start-line="796" selection-start-column="0" selection-end-line="796" selection-end-column="0" />
+            <state relative-caret-position="205">
+              <caret line="904" column="243" lean-forward="false" selection-start-line="904" selection-start-column="243" selection-end-line="904" selection-end-column="243" />
               <folding />
             </state>
           </provider>
@@ -67,8 +67,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>attrs</find>
-      <find>flds</find>
       <find>user_logge</find>
       <find>user_features</find>
       <find>vlayer</find>
@@ -90,13 +88,15 @@
       <find>find_nearest_path</find>
       <find>num</find>
       <find>ext_basema</find>
-      <find>nearest_shelter</find>
       <find>close</find>
       <find>repaint</find>
       <find>refresh_extent</find>
       <find>final</find>
       <find>basemap</find>
       <find>close_shelter</find>
+      <find>place_new</find>
+      <find>nearest_shelter</find>
+      <find>descript</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -190,7 +190,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33333334" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33333334" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -670,8 +670,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="796" column="0" lean-forward="true" selection-start-line="796" selection-start-column="0" selection-end-line="796" selection-end-column="0" />
+        <state relative-caret-position="205">
+          <caret line="904" column="243" lean-forward="false" selection-start-line="904" selection-start-column="243" selection-end-line="904" selection-end-column="243" />
           <folding />
         </state>
       </provider>
