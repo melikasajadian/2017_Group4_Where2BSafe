@@ -11,11 +11,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="wis_dockwidget.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="wis_dockwidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="950" column="8" lean-forward="false" selection-start-line="950" selection-start-column="8" selection-end-line="950" selection-end-column="8" />
+            <state relative-caret-position="141">
+              <caret line="688" column="32" lean-forward="false" selection-start-line="688" selection-start-column="26" selection-end-line="688" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -24,7 +24,7 @@
       <file leaf-file-name="pb_tool.cfg" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pb_tool.cfg">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
+            <state relative-caret-position="1260">
               <caret line="60" column="23" lean-forward="false" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
               <folding />
             </state>
@@ -41,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="resources.qrc" pinned="false" current-in-tab="true">
+      <file leaf-file-name="resources.qrc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources.qrc">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="346">
-              <caret line="29" column="33" lean-forward="false" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
+            <state relative-caret-position="630">
+              <caret line="30" column="27" lean-forward="false" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -54,8 +54,8 @@
       <file leaf-file-name="wis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="188" column="58" lean-forward="true" selection-start-line="188" selection-start-column="38" selection-end-line="188" selection-end-column="58" />
+            <state relative-caret-position="3948">
+              <caret line="188" column="58" lean-forward="false" selection-start-line="188" selection-start-column="38" selection-end-line="188" selection-end-column="58" />
               <folding>
                 <element signature="e#1205#1284#0" expanded="true" />
               </folding>
@@ -67,12 +67,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>vlayer</find>
-      <find>user_layer</find>
-      <find>showShelter</find>
-      <find>user</find>
-      <find>user_logged</find>
-      <find>user_pos_path</find>
       <find>active</find>
       <find>trigger</find>
       <find>gra</find>
@@ -97,6 +91,12 @@
       <find>descript</find>
       <find>seconds</find>
       <find>setText</find>
+      <find>showShelter</find>
+      <find>showShel</find>
+      <find>showS</find>
+      <find>wait</find>
+      <find>closeReach</find>
+      <find>second</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -104,8 +104,8 @@
       <list>
         <option value="$PROJECT_DIR$/wis.py" />
         <option value="$PROJECT_DIR$/pb_tool.cfg" />
-        <option value="$PROJECT_DIR$/wis_dockwidget.py" />
         <option value="$PROJECT_DIR$/resources.qrc" />
+        <option value="$PROJECT_DIR$/wis_dockwidget.py" />
       </list>
     </option>
   </component>
@@ -116,8 +116,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="345" />
-    <option name="y" value="21" />
+    <option name="x" value="-18" />
+    <option name="y" value="44" />
     <option name="width" value="1864" />
     <option name="height" value="981" />
   </component>
@@ -137,7 +137,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -149,6 +148,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -183,7 +183,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="345" y="21" width="1864" height="981" extended-state="0" />
+    <frame x="-18" y="44" width="1864" height="981" extended-state="0" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12351029" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -635,8 +635,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="188" column="58" lean-forward="true" selection-start-line="188" selection-start-column="38" selection-end-line="188" selection-end-column="58" />
+        <state relative-caret-position="3948">
+          <caret line="188" column="58" lean-forward="false" selection-start-line="188" selection-start-column="38" selection-end-line="188" selection-end-column="58" />
           <folding>
             <element signature="e#1205#1284#0" expanded="true" />
           </folding>
@@ -645,7 +645,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pb_tool.cfg">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
+        <state relative-caret-position="1260">
           <caret line="60" column="23" lean-forward="false" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
           <folding />
         </state>
@@ -659,18 +659,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
+    <entry file="file://$PROJECT_DIR$/resources.qrc">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="950" column="8" lean-forward="false" selection-start-line="950" selection-start-column="8" selection-end-line="950" selection-end-column="8" />
+        <state relative-caret-position="630">
+          <caret line="30" column="27" lean-forward="false" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources.qrc">
+    <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="29" column="33" lean-forward="false" selection-start-line="29" selection-start-column="33" selection-end-line="29" selection-end-column="33" />
+        <state relative-caret-position="141">
+          <caret line="688" column="32" lean-forward="false" selection-start-line="688" selection-start-column="26" selection-end-line="688" selection-end-column="32" />
           <folding />
         </state>
       </provider>

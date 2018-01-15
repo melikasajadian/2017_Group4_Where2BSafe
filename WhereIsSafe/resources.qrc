@@ -28,5 +28,6 @@
     <file>graphics/reachedback.png</file>
     <file>graphics/infoback.png</file>
     <file>graphics/selectback.png</file>
+    <file>graphics/wait.gif</file>
     </qresource>
 </RCC>

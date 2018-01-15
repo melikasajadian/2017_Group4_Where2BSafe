@@ -101,6 +101,10 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.AppIcon_btn.clicked.connect(self.startapp)
         self.Notif_btn.clicked.connect(self.startapp)
         self.select_btn.clicked.connect(self.go_to_shelter)
+        self.callcancel_btn.clicked.connect(self.cancelCallEmFun)
+        self.callok_btn.clicked.connect(self.callEmFun)
+        self.confirm_btn.clicked.connect(self.closeReach)
+
 
 
         self.Monitor.hide()
@@ -115,6 +119,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.lastNotif.hide()
         self.arrowFrame.hide()
         self.arrowFrame2.hide()
+        self.callingFrame.hide()
 
         movie = QtGui.QMovie(':graphics/pollutionmovie.gif')
         self.logoLabel.setMovie(movie)
@@ -127,6 +132,8 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         movie3 = QtGui.QMovie(':graphics/arrow2.gif')
         self.arrowLable2.setMovie(movie3)
         movie3.start()
+
+
 
 
     def startapp(self):
@@ -173,17 +180,34 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.Monitor.hide()
         self.Call112.hide()
         self.map_canvas.show()
-        self.layers.show()
         getattr(self.map_canvas, "raise")()
         self.showShelter()
         self.arrowFrame.hide()
-        self.arrowFrame2.show()
-        getattr(self.arrowFrame2, "raise")()
+
 
     def callFun(self):
         self.map_canvas.hide()
         self.Call112.show()
         getattr(self.Call112, "raise")()
+
+    def callEmFun(self):
+        self.Monitor.hide()
+        self.Profile.hide()
+        self.layers.hide()
+        self.map_canvas.hide()
+        self.Call112.show()
+        getattr(self.Call112, "raise")()
+
+    def cancelCallEmFun(self):
+        self.Monitor.hide()
+        self.Profile.hide()
+        self.layers.hide()
+        self.map_canvas.show()
+        getattr(self.map_canvas, "raise")()
+
+    def closeReach(self):
+        self.lastNotif.hide()
+        self.layers.hide()
 
 
     def shelter_parser(self, layer):
@@ -317,13 +341,10 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.active_shpfiles["road_network"][0].triggerRepaint()
 
     def showShelter(self):
+
         if self.no.isChecked()==True:
-            self.Monitor.hide()
-            self.Profile.hide()
-            self.layers.hide()
-            self.map_canvas.hide()
-            self.Call112.show()
-            getattr(self.Call112, "raise")()
+            self.callingFrame.show()
+            getattr(self.callingFrame, "raise")()
 
         if self.yes.isChecked()==True:
             layerPoint=self.user_pos
@@ -422,9 +443,13 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.shelter_dict = self.shelter_parser(self.active_shpfiles["customize_shelter"][0])
             self.selected_shelter_pos=self.close_shelter()
             self.find_nearest_path()
+            self.arrowFrame2.show()
+            getattr(self.arrowFrame2, "raise")()
+            self.layers.show()
+            getattr(self.layers, "raise")()
 
-            self.dangerNotif.hide()
-            self.safeNotif.hide()
+        self.dangerNotif.hide()
+        self.safeNotif.hide()
 
 
 
@@ -663,9 +688,9 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             seconds = (dist / self.speed)
             m, s = divmod(seconds, 60)
             h, m = divmod(m, 60)
-            traveltime = str(h) + " : " + str(m) + " : " + str(int(s))
+            traveltime = str(int(h)) + " : " + str(int(m)) + " : " + str(int(s))
             if self.speed <= 1:
-                timeStr = str(traveltime) + " min of walking"
+                timeStr = str(traveltime) + "of walking"
             elif 2 <= self.speed <= 4:
                 timeStr = str(traveltime) + " by bike"
             else:
@@ -752,9 +777,9 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             seconds = (dist / self.speed)
                             m, s = divmod(seconds, 60)
                             h, m = divmod(m, 60)
-                            traveltime = str(h) + " : " + str(m) + " : " + str(int(s))
+                            traveltime = str(int(h)) + " : " + str(int(m)) + " : " + str(int(s))
                             if self.speed <= 1:
-                                timeStr = str(traveltime) + " min of walking"
+                                timeStr = str(traveltime) + " of walking"
                             elif 2 <= self.speed <= 4:
                                 timeStr = str(traveltime) + " by bike"
                             else:
@@ -768,9 +793,9 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             seconds = (dist / self.speed)
                             m, s = divmod(seconds, 60)
                             h, m = divmod(m, 60)
-                            traveltime = str(h) + " : " + str(m) + " : " + str(int(s))
+                            traveltime = str(int(h)) + " : " + str(int(m)) + " : " + str(int(s))
                             if self.speed <= 1:
-                                timeStr = str(traveltime) + " min of walking"
+                                timeStr = str(traveltime) + " of walking"
                             elif 2 <= self.speed <= 4:
                                 timeStr = str(traveltime) + " by bike"
                             else:
