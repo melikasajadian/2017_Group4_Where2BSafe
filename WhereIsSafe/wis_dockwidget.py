@@ -937,8 +937,15 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # self.register_event.setStyleSheet(
             # "QPushButton#register_event:hover {background-image: url(:/graphics/thin_button_background_correct.png);}")
         self.ShelterInfo.hide()
-        infoStr = "You now reached to the shelter." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The number of people in the shelter is now " + str(int(self.infoDict[
+        if self.infoDict['fclass'] == 'college' or self.infoDict['fclass'] == 'library' or self.infoDict['fclass'] == 'shelter' or self.infoDict['fclass'] == 'school' or self.infoDict['fclass'] == 'university' or self.infoDict['fclass'] == 'sports_centre':
+            infoStr = "You now reached to the shelter." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The number of people in the shelter is now " + str(int(self.infoDict[
             'occupied']) + 1 ) + "\n"
+        elif self.infoDict['fclass'] == 'Buslijn' or self.infoDict['fclass'] == 'BOB_buslijn':
+            infoStr = "You now reached to the public transport station." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The bus will arrive any minute now "
+        elif self.infoDict['fclass'] == 'Tramlijn':
+            infoStr = "You now reached to the public transport station." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The tram will arrive any minute now "
+        else:
+            infoStr = "You now reached to the public transport station." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The metro will arrive any minute now "
         self.lastNotif.show()
         getattr(self.lastNotif, "raise")()
         self.reachedNotif.setText(infoStr)
