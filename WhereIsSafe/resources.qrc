@@ -22,5 +22,8 @@
     <file>graphics/bigicon.png</file>
     <file>graphics/firstNotif.png</file>
     <file>graphics/close.png</file>
+    <file>graphics/pushButton.png</file>
+    <file>graphics/arrow.gif</file>
+    <file>graphics/arrow2.gif</file>
     </qresource>
 </RCC>

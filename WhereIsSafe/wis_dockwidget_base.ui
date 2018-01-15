@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
+    <width>401</width>
     <height>788</height>
    </rect>
   </property>
@@ -47,7 +47,8 @@ background-image: url(:/graphics/first_page.png);
 background-position: top left;
 }
 
-QCommandLinkButton#start_btn{
+QPushButton#start_btn{
+background-image: url(:/graphics/pushButton.png);
 border: none;
 font-size: 12pt;
 color: red;
@@ -104,6 +105,7 @@ background-position: top left;
 }
 
 QPushButton#layers_btn{
+background-color:transparent;
 background-image: url(:/graphics/info.png);
 background-position: top left;
 }
@@ -206,13 +208,13 @@ background-image: url(:/graphics/Twitter_feed.png);
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QCommandLinkButton" name="start_btn">
+     <widget class="QPushButton" name="start_btn">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>450</y>
-        <width>351</width>
-        <height>121</height>
+        <x>40</x>
+        <y>520</y>
+        <width>290</width>
+        <height>90</height>
        </rect>
       </property>
       <property name="cursor">
@@ -221,7 +223,7 @@ background-image: url(:/graphics/Twitter_feed.png);
       <property name="text">
        <string>WARNING! 
 There is a chemical spread near
-you. check for more info </string>
+you. Check for more info </string>
       </property>
       <property name="autoDefault">
        <bool>true</bool>
@@ -250,7 +252,7 @@ you. check for more info </string>
       <property name="geometry">
        <rect>
         <x>145</x>
-        <y>470</y>
+        <y>469</y>
         <width>70</width>
         <height>70</height>
        </rect>
@@ -735,7 +737,7 @@ you. check for more info </string>
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>380</y>
+        <y>360</y>
         <width>83</width>
         <height>81</height>
        </rect>
@@ -790,6 +792,64 @@ you. check for more info </string>
       </property>
      </widget>
     </widget>
+    <widget class="QFrame" name="arrowFrame">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>120</y>
+       <width>41</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="arrowLable">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>41</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="arrowFrame2">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>577</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="arrowLable2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>71</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
     <zorder>FirstPage</zorder>
     <zorder>Call112</zorder>
     <zorder>Profile</zorder>
@@ -800,6 +860,8 @@ you. check for more info </string>
     <zorder>AppPage</zorder>
     <zorder>AppPage</zorder>
     <zorder>lastNotif</zorder>
+    <zorder>arrowFrame</zorder>
+    <zorder>arrowFrame2</zorder>
    </widget>
    <widget class="QFrame" name="ShelterInfo">
     <property name="geometry">

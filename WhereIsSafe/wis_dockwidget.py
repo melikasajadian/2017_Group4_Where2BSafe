@@ -112,10 +112,20 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.ShelterInfo.hide()
         self.FirstPage.hide()
         self.lastNotif.hide()
+        self.arrowFrame.hide()
+        self.arrowFrame2.hide()
 
         movie = QtGui.QMovie(':graphics/pollutionmovie.gif')
         self.logoLabel.setMovie(movie)
         movie.start()
+
+        movie2 = QtGui.QMovie(':graphics/arrow.gif')
+        self.arrowLable.setMovie(movie2)
+        movie2.start()
+
+        movie3 = QtGui.QMovie(':graphics/arrow2.gif')
+        self.arrowLable2.setMovie(movie3)
+        movie3.start()
 
 
     def startapp(self):
@@ -164,6 +174,9 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.layers.show()
         getattr(self.map_canvas, "raise")()
         self.showShelter()
+        self.arrowFrame.hide()
+        self.arrowFrame2.show()
+        getattr(self.arrowFrame2, "raise")()
 
     def callFun(self):
         self.map_canvas.hide()
@@ -904,6 +917,8 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def isInDanger(self):
+        self.arrowFrame.show()
+        getattr(self.arrowFrame, "raise")()
         intersectPly=[]
         for layer1 in [self.active_shpfiles[x][0] for x in
                       ["user_logged"]]:
@@ -918,6 +933,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         if not intersectPly:
             self.safeNotif.show()
             getattr(self.safeNotif, "raise")()
+
 
         else:
             self.dangerNotif.show()
@@ -939,7 +955,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def go_to_shelter(self):
         fid = [feat for feat in self.active_shpfiles["user_logged"][0].getFeatures()][0].id()
-
+        self.arrowFrame2.hide()
         # Try to get new user position from the path queue
         while self.user_pos_path:
             time.sleep(0.0001)
