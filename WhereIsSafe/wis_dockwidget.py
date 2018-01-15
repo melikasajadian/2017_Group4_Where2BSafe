@@ -663,7 +663,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             seconds = (dist / self.speed)
             m, s = divmod(seconds, 60)
             h, m = divmod(m, 60)
-            traveltime = str(h) + " : " + str(m) + " : " + str(s)
+            traveltime = str(h) + " : " + str(m) + " : " + str(int(s))
             if self.speed <= 1:
                 timeStr = str(traveltime) + " min of walking"
             elif 2 <= self.speed <= 4:
@@ -752,7 +752,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             seconds = (dist / self.speed)
                             m, s = divmod(seconds, 60)
                             h, m = divmod(m, 60)
-                            traveltime = str(h) + " : " + str(m) + " : " + str(s)
+                            traveltime = str(h) + " : " + str(m) + " : " + str(int(s))
                             if self.speed <= 1:
                                 timeStr = str(traveltime) + " min of walking"
                             elif 2 <= self.speed <= 4:
@@ -768,7 +768,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             seconds = (dist / self.speed)
                             m, s = divmod(seconds, 60)
                             h, m = divmod(m, 60)
-                            traveltime = str(h) + " : " + str(m) + " : " + str(s)
+                            traveltime = str(h) + " : " + str(m) + " : " + str(int(s))
                             if self.speed <= 1:
                                 timeStr = str(traveltime) + " min of walking"
                             elif 2 <= self.speed <= 4:

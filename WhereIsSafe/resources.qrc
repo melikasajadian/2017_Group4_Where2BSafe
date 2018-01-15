@@ -25,5 +25,8 @@
     <file>graphics/pushButton.png</file>
     <file>graphics/arrow.gif</file>
     <file>graphics/arrow2.gif</file>
+    <file>graphics/reachedback.png</file>
+    <file>graphics/infoback.png</file>
+    <file>graphics/selectback.png</file>
     </qresource>
 </RCC>

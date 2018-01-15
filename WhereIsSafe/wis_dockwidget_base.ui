@@ -47,6 +47,17 @@ background-image: url(:/graphics/first_page.png);
 background-position: top left;
 }
 
+
+QFrame#ShelterInfo{
+background-image: url(:/graphics/infoback.png);
+background-position: top;
+}
+
+QFrame#lastNotif{
+background-image: url(:/graphics/reachedback.png);
+background-position: top;
+}
+
 QPushButton#start_btn{
 background-image: url(:/graphics/pushButton.png);
 border: none;
@@ -138,7 +149,7 @@ border: none;
 }
 
 QPushButton#select_btn{
-background-color:transparent;
+background-image: url(:/graphics/selectback.png);
 border: none;
 color: green;
 }
@@ -149,6 +160,7 @@ background-color:transparent;
 border: none;
 background-image: url(:/graphics/close.png);
 }
+
 QWidget#scroll_messages_contents{
 background-image: url(:/graphics/Twitter_feed.png);
 }</string>
