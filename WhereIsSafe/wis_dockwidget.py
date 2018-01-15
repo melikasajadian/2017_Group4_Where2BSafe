@@ -72,6 +72,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shelter_dict = {}
         self.shelter_features={}
         self.infoDict={}
+        self.speed=0;
 
         # Define the graph
         self.graph = QgsGraph()
@@ -310,7 +311,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/pollution.qml")
 
         # Load the corresponding Shapefiles
-        self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged", "pollution", "road_network", "basemap"]]
+        self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged", "pollution", "basemap", "road_network"]]
 
         # provide set of layers for display on the map canvas
         self.map_canvas.setLayerSet(self.added_canvaslayers)
@@ -374,45 +375,50 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     flds = [str(field.name()) for field in vlayer.pendingFields()]
                     attrs = f.attributes()
                     dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
-                    if self.young.isChecked()==True:
-                        if attrs[flds.index('capacity')]-attrs[flds.index('occupied')]>20:
-                            if self.walk.isChecked()==True:
-                                if dist<3000:
-                                    # Update the dictionary refering to each different user as a distinct feature object of a shapefile
-                                    self.shelter_features[f['shelter_id']] = f
+                    if self.car.isChecked()==True:
+                        if attrs[flds.index('shelter_id')]<187:
+                            # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                            self.shelter_features[f['shelter_id']] = f
+                            # Add the user feature into the provider/layer
+                            prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                            self.speed = 10;
 
-                                    # Add the user feature into the provider/layer
-                                    prov.addFeatures([self.shelter_features[f['shelter_id']]])
-                            if self.bike.isChecked() == True:
-                                    if dist < 5000:
-                                            # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                    if self.bike.isChecked()==True or self.walk.isChecked()==True:
+                        if self.young.isChecked()==True:
+                            if attrs[flds.index('capacity')]-attrs[flds.index('occupied')]>20 or attrs[flds.index('capacity')]==0:
+                                if self.walk.isChecked()==True:
+                                    if dist<1500:
+                                        # Update the dictionary refering to each different user as a distinct feature object of a shapefile
                                         self.shelter_features[f['shelter_id']] = f
+                                        self.speed = 1
+
                                         # Add the user feature into the provider/layer
                                         prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                                if self.bike.isChecked() == True:
+                                        if dist < 2500:
+                                                # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                                            self.shelter_features[f['shelter_id']] = f
+                                            # Add the user feature into the provider/layer
+                                            prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                                            self.speed = 3.5
 
-                            if self.car.isChecked() == True:
-                                self.shelter_features[f['shelter_id']] = f
-                                # Add the user feature into the provider/layer
-                                prov.addFeatures([self.shelter_features[f['shelter_id']]])
 
-                    if self.child.isChecked() == True or self.old.isChecked() == True:
-                        if self.walk.isChecked() == True:
-                            dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
-                            if dist < 1000:
-                                self.shelter_features[f['shelter_id']] = f
-                                prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                        if self.child.isChecked() == True or self.old.isChecked() == True:
+                            if self.walk.isChecked() == True:
+                                dist = f.geometry().distance(QgsGeometry.fromPoint(layerPoint))
+                                if dist < 1000:
+                                    self.shelter_features[f['shelter_id']] = f
+                                    prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                                    self.speed = 0.7
 
-                        if self.bike.isChecked() == True:
+                            if self.bike.isChecked() == True:
                                 if dist < 1500:
                                     # Update the dictionary refering to each different user as a distinct feature object of a shapefile
                                     self.shelter_features[f['shelter_id']] = f
                                     # Add the user feature into the provider/layer
                                     prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                                    self.speed = 3
 
-                        if self.car.isChecked() == True:
-                            self.shelter_features[f['shelter_id']] = f
-                            # Add the user feature into the provider/layer
-                            prov.addFeatures([self.shelter_features[f['shelter_id']]])
 
 
                 # Set the symbol for the layer
@@ -432,7 +438,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 os.path.dirname(os.path.abspath(__file__)) + "/DB/shapefile_layers/Total_shelters.qml")
 
             # Load the corresponding Shapefiles
-            self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged","customize_shelter", "pollution", "road_network", "basemap"]]
+            self.added_canvaslayers = [self.active_shpfiles[x][1] for x in ["user_logged","customize_shelter", "pollution", "basemap", "road_network"]]
 
             # provide set of layers for display on the map canvas
             self.map_canvas.setLayerSet(self.added_canvaslayers)
@@ -548,8 +554,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.active_shpfiles["new_place"] = [layer, QgsMapCanvasLayer(layer)]
 
         self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
-                                       ["user_logged", "customize_shelter","new_place", "pollution", "road_network",
-                                           "basemap"]]
+                                       ["user_logged", "customize_shelter","new_place", "pollution","basemap", "road_network"]]
 
         # provide set of layers for display on the map canvas
         self.map_canvas.setLayerSet(self.added_canvaslayers)
@@ -655,12 +660,10 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         if "new_place" in self.active_shpfiles:
             self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
-                                    ["user_logged","Routes", "customize_shelter", "new_place", "pollution", "road_network",
-                                    "basemap"]]
+                                    ["user_logged","Routes", "customize_shelter", "new_place", "pollution","basemap", "road_network"]]
         else:
             self.added_canvaslayers = [self.active_shpfiles[x][1] for x in
-                                       ["user_logged", "Routes", "customize_shelter", "pollution", "road_network",
-                                        "basemap"]]
+                                       ["user_logged", "Routes", "customize_shelter", "pollution","basemap", "road_network"]]
         self.map_canvas.setLayerSet(self.added_canvaslayers)
 
     def calculateRouteDijkstra(self, graph, from_point, to_point, impedance=0):
@@ -753,14 +756,44 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                         shortestDistance = dist
                         closestFeatureId = f.id()
                         xyPosition = f.geometry().asPoint()
-                        traveltime = str((dist / 0.6) / 60) + " min of walking"
                         # attrs is a list. It contains all the attribute values of this feature
                         attrs = f.attributes()
-                        self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
-                                     'shelter_id': str(attrs[flds.index('shelter_id')]),
-                                     'capacity': str(attrs[flds.index('capacity')]),
-                                     'occupied': str(attrs[flds.index('occupied')]),
-                                     'position': f.geometry().asPoint(), 'time': traveltime}
+                        print attrs[flds.index('capacity')]
+                        if attrs[flds.index('capacity')]>0:
+                            seconds = (dist / self.speed)
+                            m, s = divmod(seconds, 60)
+                            h, m = divmod(m, 60)
+                            traveltime = str(h) + " : " + str(m) + " : " + str(s)
+                            if self.speed <= 1:
+                                timeStr = str(traveltime) + " min of walking"
+                            elif 2 <= self.speed <= 4:
+                                timeStr = str(traveltime) + " by bike"
+                            else:
+                                timeStr = str(traveltime) + " by car"
+                            self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                         'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                         'capacity': str(attrs[flds.index('capacity')]),
+                                         'occupied': str(attrs[flds.index('occupied')]),
+                                         'position': f.geometry().asPoint()}
+                            print self.infoDict
+                        else:
+                            seconds = (dist / self.speed)
+                            m, s = divmod(seconds, 60)
+                            h, m = divmod(m, 60)
+                            traveltime = str(h) + " : " + str(m) + " : " + str(s)
+                            if self.speed <= 1:
+                                timeStr = str(traveltime) + " min of walking"
+                            elif 2 <= self.speed <= 4:
+                                timeStr = str(traveltime) + " by bike"
+                            else:
+                                timeStr = str(traveltime) + " by car"
+                            self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
+                                             'shelter_id': str(attrs[flds.index('shelter_id')]),
+                                             'descript': str(attrs[flds.index('desc')]),
+                                             'position': f.geometry().asPoint(),'time': timeStr}
+                            print self.infoDict
+
+
 
             info = (layer, closestFeatureId, shortestDistance, xyPosition)
             layerData.append(info)
@@ -942,7 +975,13 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def getInfo(self):
-        infoStr="Type: " + self.infoDict['fclass'] + "\n" + "Capacity: " + self.infoDict['capacity'] + "\n" + "Occupied: " + self.infoDict['occupied'] + "\n"+ "Travel time: " + self.infoDict['time'] + "\n"
+        if self.infoDict['fclass']=='college' or self.infoDict['fclass']=='library' or self.infoDict['fclass']=='shelter' or self.infoDict['fclass']=='school' or self.infoDict['fclass']=='university'  or self.infoDict['fclass']=='sports_center':
+            infoStr="Type: " + self.infoDict['fclass'] + "\n" + "Capacity: " + self.infoDict['capacity'] + "\n" + "Occupied: " + self.infoDict['occupied'] + "\n"+ "Travel time: " + self.infoDict['time'] + "\n"
+        else:
+            infoStr = "Type: " + self.infoDict['fclass'] + "\n" + "Description: " + self.infoDict[
+                'descript'] + "\n"  + "Travel time: " + self.infoDict[
+                          'time'] + "\n"
+
         self.ShelterInfo.show()
         getattr(self.ShelterInfo, "raise")()
         self.infoLable.setText(infoStr)
@@ -958,7 +997,6 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.arrowFrame2.hide()
         # Try to get new user position from the path queue
         while self.user_pos_path:
-            time.sleep(0.0001)
             self.user_pos = self.user_pos_path.pop()
             geom = QgsGeometry.fromPoint(QgsPoint(self.user_pos))
             self.active_shpfiles["user_logged"][0].dataProvider().changeGeometryValues({fid: geom})
