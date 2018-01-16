@@ -720,7 +720,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             h, m = divmod(m, 60)
             traveltime = str(int(h)) + " : " + str(int(m)) + " : " + str(int(s))
             if self.speed <= 1:
-                timeStr = str(traveltime) + "of walking"
+                timeStr = str(traveltime) + " of walking"
             elif 2 <= self.speed <= 4:
                 timeStr = str(traveltime) + " by bike"
             else:

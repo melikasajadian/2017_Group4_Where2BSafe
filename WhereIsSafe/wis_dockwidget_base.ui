@@ -166,6 +166,12 @@ color: green;
 font-size: 8pt;
 }
 
+QLabel#callingLable{
+background-color:transparent;
+color: blue;
+font-size: 10pt;
+}
+
 QLabel#infoLable{
 background-color:transparent;
 color: green;
@@ -963,7 +969,7 @@ you. Check for more info </string>
      <widget class="QLabel" name="callingLable">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>30</x>
         <y>10</y>
         <width>221</width>
         <height>31</height>
@@ -1064,7 +1070,7 @@ you. Check for more info </string>
        <x>10</x>
        <y>10</y>
        <width>271</width>
-       <height>91</height>
+       <height>85</height>
       </rect>
      </property>
      <property name="text">

@@ -14,8 +14,8 @@
       <file leaf-file-name="wis_dockwidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="359" column="37" lean-forward="true" selection-start-line="359" selection-start-column="37" selection-end-line="359" selection-end-column="37" />
+            <state relative-caret-position="310">
+              <caret line="834" column="54" lean-forward="false" selection-start-line="834" selection-start-column="54" selection-end-line="834" selection-end-column="54" />
               <folding>
                 <element signature="e#1215#1224#0" expanded="true" />
               </folding>
@@ -93,12 +93,12 @@
       <find>;</find>
       <find>showShelter</find>
       <find>bike</find>
-      <find>of walk</find>
       <find>active_shp</find>
       <find>place_new_location</find>
       <find>print</find>
       <find>shleterpos</find>
       <find>go2</find>
+      <find>of walk</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -117,7 +117,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="16" />
     <option name="width" value="1864" />
@@ -185,7 +185,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="7" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -695,8 +695,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wis_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="359" column="37" lean-forward="true" selection-start-line="359" selection-start-column="37" selection-end-line="359" selection-end-column="37" />
+        <state relative-caret-position="310">
+          <caret line="834" column="54" lean-forward="false" selection-start-line="834" selection-start-column="54" selection-end-line="834" selection-end-column="54" />
           <folding>
             <element signature="e#1215#1224#0" expanded="true" />
           </folding>
