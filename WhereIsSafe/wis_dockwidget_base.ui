@@ -47,6 +47,11 @@ background-image: url(:/graphics/first_page.png);
 background-position: top left;
 }
 
+QFrame#helpFrame{
+background-image: url(:/graphics/helpPage.png);
+background-position: top left;
+}
+
 
 QFrame#ShelterInfo{
 background-image: url(:/graphics/infoback.png);
@@ -81,6 +86,12 @@ color: blue;
 }
 
 QPushButton#backm_btn{
+font-size: 12pt;
+color: blue;
+}
+
+
+QPushButton#backHelp_btn{
 font-size: 12pt;
 color: blue;
 }
@@ -155,10 +166,14 @@ color: green;
 font-size: 8pt;
 }
 
-QLabel#callingLable{
+QLabel#infoLable{
 background-color:transparent;
-color: blue;
-font-size: 12pt;
+color: green;
+font-size: 8pt;
+}
+
+QLabel#legend{
+background-image: url(:/graphics/toxic_legend.png);
 }
 
 QLabel#reachedNotif{
@@ -464,7 +479,7 @@ you. Check for more info </string>
         <x>20</x>
         <y>340</y>
         <width>181</width>
-        <height>101</height>
+        <height>131</height>
        </rect>
       </property>
       <property name="title">
@@ -507,6 +522,19 @@ you. Check for more info </string>
        </property>
        <property name="text">
         <string>Car</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="transport">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>100</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Bus, tram or metro</string>
        </property>
       </widget>
      </widget>
@@ -674,6 +702,64 @@ you. Check for more info </string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <widget class="QLabel" name="logoLabel">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>361</width>
+        <height>154</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>204</y>
+        <width>361</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scroll_messages_contents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>338</width>
+         <height>388</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="legend">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>154</y>
+        <width>361</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
      <widget class="QPushButton" name="backm_btn">
       <property name="geometry">
        <rect>
@@ -686,45 +772,6 @@ you. Check for more info </string>
       <property name="text">
        <string>Back to the map</string>
       </property>
-     </widget>
-     <widget class="QLabel" name="logoLabel">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>361</width>
-        <height>154</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>155</y>
-        <width>361</width>
-        <height>345</height>
-       </rect>
-      </property>
-      <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOn</enum>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scroll_messages_contents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>338</width>
-         <height>343</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
     </widget>
     <widget class="QLabel" name="dangerNotif">
@@ -797,9 +844,6 @@ you. Check for more info </string>
        <string/>
       </property>
      </widget>
-     <zorder>AppIcon_btn</zorder>
-     <zorder>Notif_btn</zorder>
-     <zorder>lastNotif</zorder>
     </widget>
     <widget class="QFrame" name="lastNotif">
      <property name="geometry">
@@ -807,7 +851,7 @@ you. Check for more info </string>
        <x>25</x>
        <y>200</y>
        <width>331</width>
-       <height>100</height>
+       <height>120</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -822,7 +866,7 @@ you. Check for more info </string>
         <x>10</x>
         <y>0</y>
         <width>321</width>
-        <height>81</height>
+        <height>95</height>
        </rect>
       </property>
       <property name="text">
@@ -833,7 +877,7 @@ you. Check for more info </string>
       <property name="geometry">
        <rect>
         <x>242</x>
-        <y>60</y>
+        <y>85</y>
         <width>61</width>
         <height>28</height>
        </rect>
@@ -956,19 +1000,35 @@ you. Check for more info </string>
       </property>
      </widget>
     </widget>
-    <zorder>FirstPage</zorder>
-    <zorder>Call112</zorder>
-    <zorder>Profile</zorder>
-    <zorder>map_canvas</zorder>
-    <zorder>Monitor</zorder>
-    <zorder>dangerNotif</zorder>
-    <zorder>safeNotif</zorder>
-    <zorder>AppPage</zorder>
-    <zorder>AppPage</zorder>
-    <zorder>lastNotif</zorder>
-    <zorder>arrowFrame</zorder>
-    <zorder>arrowFrame2</zorder>
-    <zorder>callingFrame</zorder>
+    <widget class="QFrame" name="helpFrame">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>361</width>
+       <height>621</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="backHelp_btn">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>510</y>
+        <width>190</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Back to the map</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QFrame" name="ShelterInfo">
     <property name="geometry">
@@ -976,7 +1036,7 @@ you. Check for more info </string>
       <x>40</x>
       <y>559</y>
       <width>321</width>
-      <height>111</height>
+      <height>120</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -1015,7 +1075,7 @@ you. Check for more info </string>
      <property name="geometry">
       <rect>
        <x>210</x>
-       <y>75</y>
+       <y>85</y>
        <width>101</width>
        <height>28</height>
       </rect>
@@ -1027,10 +1087,16 @@ you. Check for more info </string>
       </font>
      </property>
      <property name="text">
-      <string>Select shelter</string>
+      <string>Go!</string>
      </property>
     </widget>
    </widget>
+   <zorder>Screen</zorder>
+   <zorder>App</zorder>
+   <zorder>ShelterInfo</zorder>
+   <zorder>reachedNotif</zorder>
+   <zorder>infoLable</zorder>
+   <zorder>AppPage</zorder>
   </widget>
  </widget>
  <customwidgets>

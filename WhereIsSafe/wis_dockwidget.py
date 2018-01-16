@@ -72,7 +72,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shelter_dict = {}
         self.shelter_features={}
         self.infoDict={}
-        self.speed=0;
+        self.speed=0
 
         # Define the graph
         self.graph = QgsGraph()
@@ -96,7 +96,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.endcall_btn.clicked.connect(self.back2mapFun)
         self.location_btn.clicked.connect(self.user_extent)
         self.layers_btn.clicked.connect(self.getInfo)
-        #self.help_btn.clicked.connect(self.path2shelter(shelter_id))
+        self.help_btn.clicked.connect(self.gotohelp)
         self.closeInfo_btn.clicked.connect(self.close_info)
         self.AppIcon_btn.clicked.connect(self.startapp)
         self.Notif_btn.clicked.connect(self.startapp)
@@ -104,6 +104,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.callcancel_btn.clicked.connect(self.cancelCallEmFun)
         self.callok_btn.clicked.connect(self.callEmFun)
         self.confirm_btn.clicked.connect(self.closeReach)
+        self.backHelp_btn.clicked.connect(self.back2mapFun)
 
 
 
@@ -120,6 +121,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.arrowFrame.hide()
         self.arrowFrame2.hide()
         self.callingFrame.hide()
+        self.helpFrame.hide()
 
         movie = QtGui.QMovie(':graphics/pollutionmovie.gif')
         self.logoLabel.setMovie(movie)
@@ -167,11 +169,17 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         getattr(self.Profile, "raise")()
         self.shelter_features = {}
 
+    def gotohelp(self):
+        self.map_canvas.hide()
+        self.helpFrame.show()
+        getattr(self.helpFrame, "raise")()
+
     def back2mapFun(self):
         self.Monitor.hide()
         self.Profile.hide()
         self.Call112.hide()
         self.layers.hide()
+        self.helpFrame.hide()
         self.map_canvas.show()
         getattr(self.map_canvas, "raise")()
 
@@ -208,6 +216,9 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def closeReach(self):
         self.lastNotif.hide()
         self.layers.hide()
+        if (self.bike.isChecked()==True or self.walk.isChecked()==True) and int(self.infoDict['shelter_id']) > 187:
+            self.go2profileFun()
+
 
 
     def shelter_parser(self, layer):
@@ -341,6 +352,12 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.active_shpfiles["road_network"][0].triggerRepaint()
 
     def showShelter(self):
+        if "customize_shelter" in self.active_shpfiles:
+            QgsMapLayerRegistry.instance().removeMapLayer(self.active_shpfiles["customize_shelter"][0])
+
+            # Delete the corresponding key from the active shapefiles dictionary
+            del self.active_shpfiles["customize_shelter"]
+            self.map_canvas.refresh()
 
         if self.no.isChecked()==True:
             self.callingFrame.show()
@@ -373,7 +390,14 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             self.shelter_features[f['shelter_id']] = f
                             # Add the user feature into the provider/layer
                             prov.addFeatures([self.shelter_features[f['shelter_id']]])
-                            self.speed = 10;
+                            self.speed = 10
+
+                    if self.transport.isChecked()==True:
+                        # Update the dictionary refering to each different user as a distinct feature object of a shapefile
+                        self.shelter_features[f['shelter_id']] = f
+                        # Add the user feature into the provider/layer
+                        prov.addFeatures([self.shelter_features[f['shelter_id']]])
+                        self.speed = 10
 
                     if self.bike.isChecked()==True or self.walk.isChecked()==True:
                         if self.young.isChecked()==True:
@@ -438,15 +462,15 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Refresh extent to user position
             # * Needed
             self.refresh_extent("user_pos")
-
-            # Convert shelters into a dictionary
-            self.shelter_dict = self.shelter_parser(self.active_shpfiles["customize_shelter"][0])
-            self.selected_shelter_pos=self.close_shelter()
-            self.find_nearest_path()
-            self.arrowFrame2.show()
-            getattr(self.arrowFrame2, "raise")()
-            self.layers.show()
-            getattr(self.layers, "raise")()
+            if self.bike.isChecked() == True or self.walk.isChecked() == True or self.car.isChecked() == True:
+                # Convert shelters into a dictionary
+                self.shelter_dict = self.shelter_parser(self.active_shpfiles["customize_shelter"][0])
+                self.selected_shelter_pos=self.close_shelter()
+                self.find_nearest_path()
+                self.arrowFrame2.show()
+                getattr(self.arrowFrame2, "raise")()
+                self.layers.show()
+                getattr(self.layers, "raise")()
 
         self.dangerNotif.hide()
         self.safeNotif.hide()
@@ -457,6 +481,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def place_new_location(self, *args):
 
         if "Routes" in self.active_shpfiles:
+            print 'hi'
             # Remove the "joined_event" layer
             QgsMapLayerRegistry.instance().removeMapLayer(self.active_shpfiles["Routes"][0])
 
@@ -486,6 +511,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.map_canvas.refresh()
         self.approximate_shelter(xy)
         shleterpos=self.infoDict['position']
+        print shleterpos
         translated_x= shleterpos[0]
         translated_y = shleterpos[1]
         # Use road_network as the ref system.
@@ -557,6 +583,10 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selected_shelter_pos = [feat for feat in self.active_shpfiles["new_place"][0].getFeatures()][0].geometry().asPoint()
 
         self.find_nearest_path()
+        self.arrowFrame2.show()
+        getattr(self.arrowFrame2, "raise")()
+        self.layers.show()
+        getattr(self.layers, "raise")()
 
         # Get the ID of the user feature
 
@@ -694,7 +724,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             elif 2 <= self.speed <= 4:
                 timeStr = str(traveltime) + " by bike"
             else:
-                timeStr = str(traveltime) + " by car"
+                timeStr = str(traveltime) + " by car or public transport"
 
             self.infoDict['time']= timeStr
 
@@ -783,7 +813,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             elif 2 <= self.speed <= 4:
                                 timeStr = str(traveltime) + " by bike"
                             else:
-                                timeStr = str(traveltime) + " by car"
+                                timeStr = str(traveltime) + " by car or public transport"
                             self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
                                          'shelter_id': str(attrs[flds.index('shelter_id')]),
                                          'capacity': str(attrs[flds.index('capacity')]),
@@ -799,7 +829,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
                             elif 2 <= self.speed <= 4:
                                 timeStr = str(traveltime) + " by bike"
                             else:
-                                timeStr = str(traveltime) + " by car"
+                                timeStr = str(traveltime) + " by car or public transport"
                             self.infoDict = {'fclass': attrs[flds.index('fclass')], 'name': attrs[flds.index('name')],
                                              'shelter_id': str(attrs[flds.index('shelter_id')]),
                                              'descript': str(attrs[flds.index('desc')]),
@@ -943,6 +973,7 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.ShelterInfo.hide()
 
 
+
     def go_to_shelter(self):
         fid = [feat for feat in self.active_shpfiles["user_logged"][0].getFeatures()][0].id()
         self.arrowFrame2.hide()
@@ -962,18 +993,23 @@ class WhereIsSafeDockWidget(QtGui.QDockWidget, FORM_CLASS):
             # self.register_event.setStyleSheet(
             # "QPushButton#register_event:hover {background-image: url(:/graphics/thin_button_background_correct.png);}")
         self.ShelterInfo.hide()
+        if (self.bike.isChecked()==True or self.walk.isChecked()==True) and int(self.infoDict['shelter_id']) > 187:
+            advice = ' Please change you travel mode to bus, tram or metro.'
+        else:
+            advice = ''
         if self.infoDict['fclass'] == 'college' or self.infoDict['fclass'] == 'library' or self.infoDict['fclass'] == 'shelter' or self.infoDict['fclass'] == 'school' or self.infoDict['fclass'] == 'university' or self.infoDict['fclass'] == 'sports_centre':
-            infoStr = "You now reached to the shelter." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The number of people in the shelter is now " + str(int(self.infoDict[
+            infoStr = " You now reached to the shelter." + "\n" + " Your arrival has been communicated to authorities." + "\n" + " The number of people in the shelter is now " + str(int(self.infoDict[
             'occupied']) + 1 ) + "\n"
         elif self.infoDict['fclass'] == 'Buslijn' or self.infoDict['fclass'] == 'BOB_buslijn':
-            infoStr = "You now reached to the public transport station." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The bus will arrive any minute now "
+            infoStr = " You now reached to the public transport station." + "\n" + " Your arrival has been communicated to authorities." + "\n" + " The bus will arrive any minute now. " + "\n" +  advice
         elif self.infoDict['fclass'] == 'Tramlijn':
-            infoStr = "You now reached to the public transport station." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The tram will arrive any minute now "
+            infoStr = " You now reached to the public transport station." + "\n" + " Your arrival has been communicated to authorities." + "\n" + " The tram will arrive any minute now. " + "\n" +  advice
         else:
-            infoStr = "You now reached to the public transport station." + "\n" + "Your arrival has been communicated to authorities." + "\n" + " The metro will arrive any minute now "
+            infoStr = " You now reached to the public transport station." + "\n" + " Your arrival has been communicated to authorities." + "\n" + " The metro will arrive any minute now. "+ "\n" +  advice
         self.lastNotif.show()
         getattr(self.lastNotif, "raise")()
         self.reachedNotif.setText(infoStr)
+        self.shelter_features={}
 
 
 

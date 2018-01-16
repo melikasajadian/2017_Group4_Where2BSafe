@@ -29,5 +29,7 @@
     <file>graphics/infoback.png</file>
     <file>graphics/selectback.png</file>
     <file>graphics/wait.gif</file>
+    <file>graphics/toxic_legend.png</file>
+    <file>graphics/helpPage.png</file>
     </qresource>
 </RCC>
